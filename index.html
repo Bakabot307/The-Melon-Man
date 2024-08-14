@@ -13,7 +13,7 @@
     <canvas id="canvas"></canvas>
     <div class="mobileControls">
       <button class="mobileControls__button" onmousedown="game.moveLeft()" ontouchstart="game.moveLeft()"
-        onmouseup="clearInterval(game.player.moveLeftInterval"
+        onmouseup="clearInterval(game.player.moveLeftInterval)"
         ontouchend="clearInterval(game.player.moveInterval)">Left</button>
       <button class="mobileControls__button" onmousedown="game.moveRight()" ontouchstart="game.moveRight()"
         onmouseup="clearInterval(game.player.moveRightInterval)"
@@ -22,7 +22,9 @@
         ontouchstart="game.player.jump()">Jump</button>
     </div>
     <p class="timer" id="timer">Time: 0s</p>
-    <p class="counter" id="counter">A game by Karol Swierczek | Controls: W, D / arrows and SPACE | Points: 0</p>
+    <p class="hp" id="hp">100 hp</p>
+    <p class="counter" id="counter">Points: 0</p>
+    <p class="instruction">A game by Karol Swierczek | Controls: W, D / arrows and SPACE </p>
   </div>
   <script src="js/index.js"></script>
   <script src="js/player.js"></script>
@@ -42,8 +44,9 @@
     }
     game.init(function () {
       game.generateMap()
+      game.loop()
     })
-    game.loop()
+
   </script>
   <audio controls loop autoplay hidden>
     <source src="sounds/music.mp3" type="audio/mpeg">

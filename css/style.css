@@ -37,7 +37,7 @@ canvas {
   position: relative;
 }
 
-.counter {
+.instruction {
   font-family: 'superscript', Arial, sans-serif;
   font-size: 22px;
   color: black;
@@ -47,6 +47,7 @@ canvas {
   text-align: center;
   z-index: 2;
 }
+
 
 .timer {
   font-family: 'superscript', Arial, sans-serif;
@@ -58,6 +59,29 @@ canvas {
   text-align: center;
   z-index: 2;
 }
+
+.hp {
+  font-family: 'superscript', Arial, sans-serif;
+  font-size: 22px;
+  color: black;
+  position: absolute;
+  top: 25px;
+  left: 50px;
+  text-align: center;
+  z-index: 2;
+}
+
+.counter {
+  font-family: 'superscript', Arial, sans-serif;
+  font-size: 22px;
+  color: black;
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  text-align: center;
+  z-index: 2;
+}
+
 
 .mobileControls {
   position: absolute;
@@ -89,7 +113,7 @@ canvas {
     display: flex;
   }
 
-  .counter {
+  .instruction {
     display: none;
   }
 }

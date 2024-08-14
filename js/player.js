@@ -3,6 +3,9 @@ game.player = {
 	y: 0,
 	height: 24,
 	highestY: 0,
+	hp: 100,
+	hpElement: document.getElementById('hp'),
+	justHit: false,
 	direction: "left",
 	isInAir: false,
 	startedJump: false,
@@ -49,7 +52,6 @@ game.player = {
 		}
 		if (!this.isInAir) {
 			this.initiateJump(startingY, time, maxHeight)
-
 			this.doubleJump = true
 		}
 	},

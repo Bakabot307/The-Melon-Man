@@ -1,3 +1,5 @@
+// ... (previous code remains unchanged)
+
 game.checkCollisions = function () {
 	// List potentially collidable entities
 	var watchTheseGuys = []
@@ -13,7 +15,7 @@ game.checkCollisions = function () {
 		}
 	}
 
-	// Now precisely check if there occurs any collision
+	// Check collisions with structures
 	for (var i = 0; i < watchTheseGuys.length; i++) {
 		for (var j = 0; j < game.structures[watchTheseGuys[i].name].length; j++) {
 			if (
@@ -33,4 +35,39 @@ game.checkCollisions = function () {
 	}
 
 	return false
+}
+game.checkCollisionsBall = function () {
+	// Check collisions with fireballs
+	for (var i = 0; i < game.challenges.fireball.fireballs.length; i++) {
+		var fireball = game.challenges.fireball.fireballs[i];
+		if (
+			game.player.x < fireball.x + fireball.width &&
+			game.player.x + game.options.tileWidth > fireball.x &&
+			game.player.y < fireball.y + fireball.height &&
+			game.player.y + game.options.tileHeight > fireball.y
+		) {
+
+			game.handleFireballCollision();
+			return true;
+		}
+	}
+}
+game.handleFireballCollision = function () {
+	if (game.player.justHit || !game.timer.isRunning) return;
+	console.log("player hit by fireball!");
+	game.player.justHit = true;
+	game.player.hp -= 10;
+	game.player.hpElement.innerHTML = `HP: ${game.player.hp} hp`;
+	game.player.hpElement.style.color = "red";
+
+
+	setTimeout(function () {
+		game.player.hpElement.style.color = "black";
+		game.player.justHit = false;
+	}, 3000);
+
+
+	if (game.player.hp <= 0) {
+		game.isOver = true;
+	}
 }

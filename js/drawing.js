@@ -35,6 +35,22 @@ game.drawPlayer = function () {
 	)
 }
 
+game.drawFireball = function (x, y) {
+	var screenX = x - Math.round(game.player.x) + Math.round(game.options.canvasWidth / 2);
+	var screenY = y - Math.round(game.player.y) + Math.round(game.options.canvasHeight / 2);
+	game.context.drawImage(
+		game.textures,
+		6 * game.options.tileWidth,
+		2 * game.options.tileHeight,
+		game.options.tileWidth * 2,
+		game.options.tileHeight * 2,
+		screenX,
+		screenY,
+		game.options.tileWidth,
+		game.options.tileHeight
+	)
+}
+
 game.redraw = function () {
 	// Draw the background
 	if (game.backgrounds['sky'].loaded) {
@@ -68,55 +84,24 @@ game.redraw = function () {
 		}
 	}
 
-	// Draw them
+	// Draw theme
 	for (var i = 0; i < structuresToDraw.length; i++) {
 		game.drawStructure(structuresToDraw[i].name, structuresToDraw[i].x, structuresToDraw[i].y)
 	}
 
 	// Draw the player
 	game.drawPlayer()
-
-	game.points = Math.round(-game.player.highestY / (3 * game.options.tileHeight)), game.canvas.width - 50, game.canvas.height - 12;
-	game.counter.innerHTML = "A game by Karol Swierczek | Controls: A, D / arrows and SPACE | Points: " + game.points;
-}
-
-game.timer = {
-	timer: 0,
-	isRunning: false,
-	timerElement: document.getElementById('timer'),
-	startTime: 0,
-
-	start: function () {
-		if (!this.isRunning) {
-			this.timer = Date.now() - this.elapsedTime;
-			this.startTime = Date.now();
-			this.isRunning = true;
-			this.update();
-		}
-	},
-
-	stop: function () {
-		if (this.isRunning) {
-			this.isRunning = false;
-			this.timer = Date.now() - this.startTime;
-		}
-	},
-
-	update: function () {
-		if (this.isRunning) {
-			this.timer = Date.now() - this.startTime;
-			this.updateDisplay();
-			requestAnimationFrame(this.update.bind(this));
-		}
-	},
-
-	updateDisplay: function () {
-		const seconds = Math.floor(this.timer / 1000);
-		this.timerElement.innerHTML = `Time: ${seconds}s`;
+	// Draw fireballs
+	for (var i = 0; i < game.challenges.fireball.fireballs.length; i++) {
+		game.drawFireball(game.challenges.fireball.fireballs[i].x, game.challenges.fireball.fireballs[i].y)
 	}
 
-
+	game.challenges.fireball.move();
+	game.checkCollisionsBall();
+	game.points = Math.round(-game.player.highestY / (3 * game.options.tileHeight)), game.canvas.width - 50, game.canvas.height - 12;
+	game.counter.innerHTML = "Points: " + game.points;
 }
+
 game.drawTitle = function () {
 	game.context.font = "30px superscript"
 	game.context.textAlign = "center"
@@ -153,6 +138,8 @@ game.restart = function () {
 	game.isOver = false
 	game.player.x = 54
 	game.player.y = 0
+	game.player.hp = 100
+	game.player.hpElement.innerHTML = `HP: ${game.player.hp} hp`
 	game.player.highestY = 0
 	game.player.direction = "right"
 	game.player.isInAir = false

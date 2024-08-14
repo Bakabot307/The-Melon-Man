@@ -1,10 +1,10 @@
+
 // The spaghetti code masterpiece
 var game = {
 	canvas: document.getElementById('canvas'),
 	context: this.canvas.getContext('2d', { alpha: false }),
 	counter: document.getElementById('counter'),
 	textures: new Image(),
-	drawPending: false,
 	backgrounds: {
 		'sky': {
 			image: new Image(),
@@ -40,6 +40,13 @@ var game = {
 			}.bind(this, key)
 		}
 
+
+		game.challenges.fireball.spawn()
+		this.challenges.fireball.fireInterval = setInterval(function () {
+			game.challenges.fireball.spawn()
+		}, this.challenges.fireball.fireIntervalTime)
+
+
 		this.textures.src = this.options.texturesPath
 		this.textures.onload = onInit
 	},
@@ -48,4 +55,70 @@ var game = {
 	},
 	isOver: false,
 	points: 0,
+	timer: {
+		timer: 0,
+		isRunning: false,
+		timerElement: document.getElementById('timer'),
+		startTime: 0,
+
+		start: function () {
+			if (!this.isRunning) {
+				this.timer = Date.now() - this.elapsedTime;
+				this.startTime = Date.now();
+				this.isRunning = true;
+				this.update();
+			}
+		},
+
+		stop: function () {
+			if (this.isRunning) {
+				this.isRunning = false;
+				this.timer = Date.now() - this.startTime;
+			}
+		},
+
+		update: function () {
+			if (this.isRunning) {
+				this.timer = Date.now() - this.startTime;
+				this.updateDisplay();
+				requestAnimationFrame(this.update.bind(this));
+			}
+		},
+
+		updateDisplay: function () {
+			const seconds = Math.floor(this.timer / 1000);
+			this.timerElement.innerHTML = `Time: ${seconds}s`;
+		}
+	},
+	challenges: {
+		fireball: {
+			speed: 0.1,
+			fireballs: [],
+			fireInterval: null,
+			fireIntervalTime: 5000,
+			spawn: function () {
+				var mapWidth = game.options.canvasWidth;
+				var middleStart = (mapWidth / 2) - (mapWidth * 0.25);
+				var middleWidth = mapWidth * 0.5;
+
+				this.fireballs.push({
+					x: middleStart + Math.random() * middleWidth,
+					y: game.player.y - game.options.canvasHeight,
+					width: game.options.tileWidth,
+					height: game.options.tileHeight
+				})
+			},
+			move: function () {
+				for (var i = 0; i < this.fireballs.length; i++) {
+					this.fireballs[i].y = this.fireballs[i].y + this.speed;
+					// remove fireballs if they are out of the screen
+					if (this.fireballs[i].y > game.player.y + game.options.canvasHeight) {
+						this.fireballs.splice(i, 1);
+						i--;
+					}
+				}
+			}
+		}
+	}
+
 }
