@@ -62,11 +62,17 @@ game.keydown = function (event) {
 				game.moveRight()
 				break
 			case 32:
-				game.player.jump()
+				if (game.isOver) {
+					game.restart();
+				} else {
+					game.player.jump()
+				}
+
 				break
 		}
 		game.pressedKeys[event.keyCode] = true
 	}
+
 }
 
 game.keyup = function (event) {

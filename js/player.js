@@ -7,6 +7,7 @@ game.player = {
 	isInAir: false,
 	startedJump: false,
 	moveInterval: null,
+	doubleJump: false,
 	fallTimeout: function (startingY, time, maxHeight) {
 		setTimeout(function () {
 			if (this.isInAir) {
@@ -40,19 +41,25 @@ game.player = {
 	},
 	jump: function (type) {
 		if (!game.timer.isRunning && game.timer.timer === 0) game.timer.start();
-		if (!this.isInAir) {
-			clearInterval(this.fallInterval)
-			game.sounds.jump.play()
-			this.isInAir = true
-			this.startedJump = true
-			var startingY = this.y
-			var time = 1
-			maxHeight = 121
-			if (type == "fall") {
-				time = 30
-				maxHeight = 0
-			}
-			this.fallTimeout(startingY, time, maxHeight)
+		var startingY = this.y;
+		var time = 1;
+		var maxHeight = 121;
+		if (type == "fall") {
+			time = 30;
+			maxHeight = 0;
 		}
+		if (!this.isInAir) {
+			this.initiateJump(startingY, time, maxHeight)
+
+			this.doubleJump = true
+		}
+	},
+
+	initiateJump: function (startingY, time, maxHeight) {
+		clearInterval(this.fallInterval);
+		game.sounds.jump.play();
+		this.startedJump = true;
+		this.isInAir = true;
+		this.fallTimeout(startingY, time, maxHeight);
 	}
 }
