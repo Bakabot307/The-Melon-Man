@@ -1,19 +1,19 @@
 // The spaghetti code masterpiece
 var game = {
 	canvas: document.getElementById('canvas'),
-	context: this.canvas.getContext('2d', {alpha: false}),
+	context: this.canvas.getContext('2d', { alpha: false }),
 	counter: document.getElementById('counter'),
 	textures: new Image(),
 	drawPending: false,
 	backgrounds: {
-			'sky': {
-				image: new Image(),
-				loaded: false
-			},
-			'trees': {
-				image: new Image(),
-				loaded: false
-			}
+		'sky': {
+			image: new Image(),
+			loaded: false
+		},
+		'trees': {
+			image: new Image(),
+			loaded: false
+		}
 	},
 	sounds: {
 		jump: new Audio('sounds/jump.wav')
@@ -31,7 +31,7 @@ var game = {
 		this.canvas.height = this.options.canvasHeight
 		this.context.imageSmoothingEnabled = false
 
-    this.backgrounds['sky'].image.src = "background.png"
+		this.backgrounds['sky'].image.src = "background.png"
 		this.backgrounds['trees'].image.src = "trees.png"
 
 		for (var key in this.backgrounds) {
@@ -46,5 +46,6 @@ var game = {
 	map: {
 		structures: []
 	},
-	isOver: false
+	isOver: false,
+	points: 0,
 }

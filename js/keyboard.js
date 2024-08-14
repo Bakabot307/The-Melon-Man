@@ -1,5 +1,6 @@
 // Functions responsible for keyboard events handling
 game.moveLeft = function () {
+	if (!game.timer.isRunning && game.timer.timer === 0) game.timer.start();
 	game.player.direction = "left"
 	game.clearMoveIntervals()
 	game.player.moveLeftInterval = setInterval(function () {
@@ -23,6 +24,7 @@ game.moveLeft = function () {
 }
 
 game.moveRight = function () {
+	if (!game.timer.isRunning && game.timer.timer === 0) game.timer.start();
 	game.player.direction = "right"
 	game.clearMoveIntervals()
 	game.player.moveRightInterval = setInterval(function () {
@@ -51,18 +53,18 @@ game.clearMoveIntervals = function () {
 game.keydown = function (event) {
 	if (!game.pressedKeys[event.keyCode]) { // Prevent key repeating
 		switch (event.keyCode) {
-		case 65:
-		case 37:
-			game.moveLeft()
-			break
-		case 68:
-		case 39:
-			game.moveRight()
-			break
-		case 32:
-			game.player.jump()
-			break
-	}
+			case 65:
+			case 37:
+				game.moveLeft()
+				break
+			case 68:
+			case 39:
+				game.moveRight()
+				break
+			case 32:
+				game.player.jump()
+				break
+		}
 		game.pressedKeys[event.keyCode] = true
 	}
 }
@@ -78,5 +80,5 @@ game.keyup = function (event) {
 		case 39:
 			clearInterval(game.player.moveRightInterval)
 			break
-		}
+	}
 }

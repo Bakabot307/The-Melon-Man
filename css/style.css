@@ -1,12 +1,11 @@
-
 @font-face {
-    font-family: 'superscript';
-    src:url('../font/superscript.ttf.woff') format('woff'),
-        url('../font/superscript.ttf.svg#superscript') format('svg'),
-        url('../font/superscript.ttf.eot'),
-        url('../font/superscript.ttf.eot?#iefix') format('embedded-opentype');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'superscript';
+  src: url('../font/superscript.ttf.woff') format('woff'),
+    url('../font/superscript.ttf.svg#superscript') format('svg'),
+    url('../font/superscript.ttf.eot'),
+    url('../font/superscript.ttf.eot?#iefix') format('embedded-opentype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 html,
@@ -45,6 +44,17 @@ canvas {
   position: absolute;
   bottom: 0;
   right: 20px;
+  text-align: center;
+  z-index: 2;
+}
+
+.timer {
+  font-family: 'superscript', Arial, sans-serif;
+  font-size: 22px;
+  color: black;
+  position: absolute;
+  top: 0;
+  left: 50px;
   text-align: center;
   z-index: 2;
 }
