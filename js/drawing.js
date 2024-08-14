@@ -36,8 +36,6 @@ game.drawPlayer = function () {
 }
 
 game.redraw = function () {
-	game.drawPending = false
-
 	// Draw the background
 	if (game.backgrounds['sky'].loaded) {
 		var pattern = game.context.createPattern(game.backgrounds['sky'].image, 'repeat') // Create a pattern with this image, and set it to "repeat".
@@ -131,9 +129,8 @@ game.drawTitle = function () {
 
 
 game.requestRedraw = function () {
-	if (!game.drawPending && !game.isOver) {
-		game.drawPending = true
-		requestAnimationFrame(game.redraw)
+	if (!game.isOver) {
+		game.redraw();
 	}
 
 	if (game.isOver) {
@@ -168,5 +165,9 @@ game.restart = function () {
 	game.timer.updateDisplay()
 
 	game.generateMap()
+}
+
+game.loop = function () {
 	game.requestRedraw()
+	requestAnimationFrame(game.loop)
 }
