@@ -13,8 +13,6 @@ game.player = {
 	numberOfAllowedJump: 3,
 	fallTimeoutId: null,
 	fallTimeout: function (startingY, time, maxHeight) {
-		console.log("IsInAir:", this.isInAir, "AllowedJumps:", this.numberOfAllowedJump);
-		console.log("StartingY:", startingY, "Time:", time, "MaxHeight:", maxHeight);
 		if (this.fallTimeoutId) clearTimeout(this.fallTimeoutId)
 		this.fallTimeoutId = setTimeout(function () {
 			if (this.isInAir) {
@@ -48,7 +46,7 @@ game.player = {
 		right: [{ tileColumn: 9, tileRow: 0 }, { tileColumn: 8, tileRow: 0 }, { tileColumn: 9, tileRow: 0 }, { tileColumn: 7, tileRow: 0 }]
 	},
 	jump: function (type) {
-		if (!game.timer.isRunning && game.timer.timer === 0) game.timer.start();
+		if (!game.started && game.player.y === 0) game.timer.start();
 		var startingY = this.y;
 		var time = 1;
 		var maxHeight = 121;

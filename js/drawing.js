@@ -51,6 +51,21 @@ game.drawFireball = function (x, y) {
 	)
 }
 
+game.drawLaser = function (x, y, width, height) {
+	var screenY = y - Math.round(game.player.y);
+	game.context.drawImage(
+		game.textures,
+		6 * game.options.tileWidth,
+		1.9 * game.options.tileHeight,
+		game.options.tileWidth * 1.5,
+		height,
+		x,
+		screenY,
+		width,
+		height
+	)
+}
+
 game.redraw = function () {
 	// Draw the background
 	if (game.backgrounds['sky'].loaded) {
@@ -68,7 +83,7 @@ game.redraw = function () {
 	}
 
 	// List nearest structures
-	if (!game.timer.isRunning && game.timer.timer === 0) {
+	if (!game.started) {
 		game.drawTitle();
 	}
 	var structuresToDraw = []
@@ -98,6 +113,24 @@ game.redraw = function () {
 
 	game.challenges.fireball.move();
 	game.checkCollisionsBall();
+
+	// Draw the laser floor
+
+	if (!game.challenges.laser.spawned && game.player.y < 0) {
+		game.challenges.laser.spawn()
+	} else {
+
+	}
+
+	var laser = game.challenges.laser
+
+	game.drawLaser(laser.x, laser.y, laser.width, laser.height)
+	if (game.started) {
+		game.challenges.laser.move()
+	}
+	game.checkCollisionsLaser()
+
+	// Draw the points
 	game.points = Math.round(-game.player.highestY / (3 * game.options.tileHeight)), game.canvas.width - 50, game.canvas.height - 12;
 	game.counter.innerHTML = "Points: " + game.points;
 }
@@ -108,7 +141,7 @@ game.drawTitle = function () {
 	game.context.fillStyle = "black"
 	game.context.fillText("START!!", game.canvas.width / 2, game.canvas.height / 2)
 	game.context.font = "15px Georgia"
-	game.context.fillText("Press A, D or SPACE to start the game!!", game.canvas.width / 2, game.canvas.height / 2 + 50)
+	game.context.fillText("Press SPACE to start the game!!", game.canvas.width / 2, game.canvas.height / 2 + 50)
 }
 
 
@@ -136,6 +169,7 @@ game.requestRedraw = function () {
 
 game.restart = function () {
 	game.isOver = false
+	game.started = false
 	game.player.x = 54
 	game.player.y = 0
 	game.player.hp = 100
@@ -150,6 +184,13 @@ game.restart = function () {
 	game.timer.timer = 0
 	game.timer.startTime = 0
 	game.timer.updateDisplay()
+
+	//Reset laser
+	game.challenges.laser.y = game.player.y + game.options.canvasHeight * 1.55;
+	game.challenges.laser.spawned = false;
+
+	// Reset fireballs
+	game.challenges.fireball.fireballs = []
 
 	game.generateMap()
 }

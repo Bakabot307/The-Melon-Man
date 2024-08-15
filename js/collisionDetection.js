@@ -47,14 +47,27 @@ game.checkCollisionsBall = function () {
 			game.player.y + game.options.tileHeight > fireball.y
 		) {
 
-			game.handleFireballCollision();
+			game.handleHitCollision("ball");
 			return true;
 		}
 	}
 }
-game.handleFireballCollision = function () {
-	if (game.player.justHit || !game.timer.isRunning) return;
-	console.log("player hit by fireball!");
+
+game.checkCollisionsLaser = function () {
+	var laser = game.challenges.laser
+	if (laser.spawned) {
+		var playerBottom = game.player.y + game.options.canvasHeight / 2 + game.options.tileHeight / 2;
+		var laserTop = laser.y;
+
+		if (playerBottom > laserTop) {
+			game.handleHitCollision("laser");
+			return true;
+		}
+	}
+}
+game.handleHitCollision = function (type) {
+	if (type == "laser") game.isOver = true;
+	if (game.player.justHit || !game.started) return;
 	game.player.justHit = true;
 	game.player.hp -= 10;
 	game.player.hpElement.innerHTML = `HP: ${game.player.hp} hp`;
