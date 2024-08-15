@@ -33,7 +33,29 @@ game.drawPlayer = function () {
 		game.options.tileWidth,
 		game.options.tileHeight
 	)
+
 }
+game.drawHpBar = function (width) {
+	game.context.drawImage(
+		game.textures,
+		7 * game.options.tileWidth,
+		2.5 * game.options.tileHeight,
+		game.options.tileWidth / 2,
+		game.options.tileHeight / 2,
+		Math.round(game.options.canvasWidth / 2 - game.options.tileWidth / 2 + 3),
+		Math.round(game.options.canvasHeight / 2 - game.options.tileHeight / 2 - 5),
+		width,
+		2
+	)
+	game.context.strokeStyle = "black";
+	game.context.lineWidth = 1;
+	game.context.strokeRect(
+		Math.round(game.options.canvasWidth / 2 - game.options.tileWidth / 2 + 3),
+		Math.round(game.options.canvasHeight / 2 - game.options.tileHeight / 2 - 5),
+		Math.round(game.options.canvasWidth / 4),
+		2)
+}
+
 
 game.drawFireball = function (x, y) {
 	var screenX = x - Math.round(game.player.x) + Math.round(game.options.canvasWidth / 2);
@@ -50,6 +72,7 @@ game.drawFireball = function (x, y) {
 		game.options.tileHeight
 	)
 }
+
 
 game.drawLaser = function (x, y, width, height) {
 	var screenY = y - Math.round(game.player.y);
@@ -103,9 +126,10 @@ game.redraw = function () {
 	for (var i = 0; i < structuresToDraw.length; i++) {
 		game.drawStructure(structuresToDraw[i].name, structuresToDraw[i].x, structuresToDraw[i].y)
 	}
-
 	// Draw the player
 	game.drawPlayer()
+	// Draw the hp bar
+	game.drawHpBar(2 * game.player.hp / 10)
 	// Draw fireballs
 	for (var i = 0; i < game.challenges.fireball.fireballs.length; i++) {
 		game.drawFireball(game.challenges.fireball.fireballs[i].x, game.challenges.fireball.fireballs[i].y)
