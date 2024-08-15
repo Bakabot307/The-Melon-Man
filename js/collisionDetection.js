@@ -66,7 +66,10 @@ game.checkCollisionsLaser = function () {
 	}
 }
 game.handleHitCollision = function (type) {
-	if (type == "laser") game.isOver = true;
+	if (type == "laser") {
+		game.isOver = true;
+		return;
+	};
 	if (game.player.justHit || !game.started) return;
 	game.player.justHit = true;
 	game.player.hp -= 10;

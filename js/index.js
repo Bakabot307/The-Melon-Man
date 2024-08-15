@@ -131,7 +131,7 @@ var game = {
 			},
 			move: function () {
 				//the longer the game the faster the laser floor
-				this.speed = 0.1 + Math.log(1 + game.timer.timer / 10000) / 10;
+				this.speed = 0.1 + Math.log(1 + game.points) / 10;
 				this.x = 0;
 				this.y = this.y - this.speed;
 				this.width = game.options.canvasWidth;
