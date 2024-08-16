@@ -246,12 +246,12 @@ game.redraw = function () {
 	game.points = Math.round(-game.player.highestY / (3 * game.options.tileHeight)), game.canvas.width - 50, game.canvas.height - 12;
 	game.counter.innerHTML = "Points: " + game.points;
 	var bestScore = game.getCookie("bestScore")
-	if (bestScore == null) bestScore = 0
-	if (bestScore < game.points) {
-		bestScore = game.points
-		game.setCookie("bestScore", game.bestScore, 365)
+	bestScore = bestScore ? parseInt(bestScore, 10) : 0;
+	if (game.points > bestScore) {
+		bestScore = game.points;
+		game.setCookie("bestScore", bestScore, 365);
 	}
-	game.bestScoreElement.innerHTML = "Best: " + bestScore
+	game.bestScoreElement.innerHTML = "Best: " + bestScore;
 }
 
 game.drawTitle = function () {
