@@ -20,7 +20,7 @@ var game = {
 		jump: new Audio('sounds/jump.wav')
 	},
 	options: {
-		texturesPath: "textures.png",
+		texturesPath: "textures_backup.png",
 		tileWidth: 24,
 		tileHeight: 24,
 		canvasWidth: window.innerWidth / 3,
@@ -46,6 +46,14 @@ var game = {
 		this.challenges.fireball.fireInterval = setInterval(function () {
 			game.challenges.fireball.spawn()
 		}, this.challenges.fireball.fireIntervalTime)
+		//spawn chickens
+		game.challenges.chicken.spawn()
+		this.challenges.chicken.fireInterval = setInterval(function () {
+			game.challenges.chicken.spawn()
+			console.log('chicken', game.challenges.chicken.chickens)
+		}, this.challenges.chicken.fireIntervalTime)
+
+
 
 		this.textures.src = this.options.texturesPath
 		this.textures.onload = onInit
@@ -137,8 +145,40 @@ var game = {
 				this.width = game.options.canvasWidth;
 
 			}
-		}
-	}
+		},
+		chicken: {
+			fireInterval: null,
+			chickens: [],
+			speed: 0.5,
+			fireIntervalTime: 5000,
+			stunDuration: 1000,
+			spawn: function () {
+				let x = Math.random() * game.options.canvasWidth;
+				let y = game.options.canvasHeight + game.player.y;
+				let width = game.options.tileWidth;
+				let height = game.options.tileHeight;
+				let angle = Math.atan2(game.player.y - y, game.player.x - x) * 180 / Math.PI;
+				this.chickens.push({
+					x: x,
+					y: y,
+					width: width,
+					height: height,
+					angle: angle
+				});
+			},
+			move: function () {
+				for (var i = 0; i < this.chickens.length; i++) {
+					let angleInRadians = this.chickens[i].angle * Math.PI / 180;
 
+					this.chickens[i].x += this.speed * Math.cos(angleInRadians);
+					this.chickens[i].y += this.speed * Math.sin(angleInRadians);
+				}
+				// Remove chickens if there are more than 10
+				if (this.chickens.length > 10) {
+					this.chickens.shift();
+				}
+			}
+		}
+	},
 }
 

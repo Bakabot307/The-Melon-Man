@@ -1,5 +1,3 @@
-// ... (previous code remains unchanged)
-
 game.checkCollisions = function () {
 	// List potentially collidable entities
 	var watchTheseGuys = []
@@ -41,11 +39,10 @@ game.checkCollisionsBall = function () {
 	for (var i = 0; i < game.challenges.fireball.fireballs.length; i++) {
 		var fireball = game.challenges.fireball.fireballs[i];
 		if (
-			game.player.x < fireball.x + fireball.width &&
-			game.player.x + game.options.tileWidth > fireball.x &&
-			game.player.y < fireball.y + fireball.height &&
-			game.player.y + game.options.tileHeight > fireball.y
-		) {
+			game.player.x + fireball.width < fireball.x + fireball.width * 2 &&
+			game.player.x > fireball.x &&
+			game.player.y - fireball.height < fireball.y + fireball.height / 2 &&
+			game.player.y + game.options.tileHeight / 2 > fireball.y) {
 
 			game.handleHitCollision("ball");
 			return true;
@@ -53,6 +50,42 @@ game.checkCollisionsBall = function () {
 	}
 }
 
+
+game.checkCollisionsChicken = function () {
+	// Check collisions with chickens
+	for (var i = 0; i < game.challenges.chicken.chickens.length; i++) {
+		var chicken = game.challenges.chicken.chickens[i];
+
+		if (
+			game.player.x + chicken.width < chicken.x + chicken.width * 2 &&
+			game.player.x > chicken.x &&
+			game.player.y - chicken.height < chicken.y + chicken.height / 2 &&
+			game.player.y + game.options.tileHeight / 2 > chicken.y) {
+			game.knockPlayerBack();
+			return true;
+		}
+	}
+}
+
+game.knockPlayerBack = function () {
+	if (game.player.justHitByChicken) return;
+	if (game.player.direction == "left") {
+		game.player.x += 10;
+	} else {
+		game.player.x -= 10;
+	}
+	if (!game.checkCollisions()) {
+		// Player should fall
+		game.player.jump("fall")
+	}
+	var currentDirection = game.player.direction;
+	game.player.direction = "stunned";
+	game.player.justHitByChicken = true;
+	setTimeout(function () {
+		game.player.direction = currentDirection;
+		game.player.justHitByChicken = false;
+	}, game.challenges.chicken.stunDuration);
+}
 game.checkCollisionsLaser = function () {
 	var laser = game.challenges.laser
 	if (laser.spawned) {
@@ -80,7 +113,7 @@ game.handleHitCollision = function (type) {
 	setTimeout(function () {
 		game.player.hpElement.style.color = "black";
 		game.player.justHit = false;
-	}, 3000);
+	}, game.challenges.fireball.fireIntervalTime);
 
 
 	if (game.player.hp <= 0) {

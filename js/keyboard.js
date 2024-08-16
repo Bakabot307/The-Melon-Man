@@ -47,6 +47,7 @@ game.clearMoveIntervals = function () {
 }
 
 game.keydown = function (event) {
+	if (game.player.justHitByChicken) return;
 	if (!game.pressedKeys[event.keyCode]) { // Prevent key repeating
 		switch (event.keyCode) {
 			case 65:

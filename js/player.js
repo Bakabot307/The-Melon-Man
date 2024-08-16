@@ -6,6 +6,7 @@ game.player = {
 	hp: 100,
 	hpElement: document.getElementById('hp'),
 	justHit: false,
+	justHitByChicken: false,
 	direction: "left",
 	isInAir: false,
 	startedJump: false,
@@ -43,10 +44,12 @@ game.player = {
 	animations: {
 		// Describe coordinates of consecutive animation frames of objects in textures
 		left: [{ tileColumn: 4, tileRow: 0 }, { tileColumn: 5, tileRow: 0 }, { tileColumn: 4, tileRow: 0 }, { tileColumn: 6, tileRow: 0 }],
-		right: [{ tileColumn: 9, tileRow: 0 }, { tileColumn: 8, tileRow: 0 }, { tileColumn: 9, tileRow: 0 }, { tileColumn: 7, tileRow: 0 }]
+		right: [{ tileColumn: 9, tileRow: 0 }, { tileColumn: 8, tileRow: 0 }, { tileColumn: 9, tileRow: 0 }, { tileColumn: 7, tileRow: 0 }],
+		stunned: [{ tileColumn: 9, tileRow: 1 }, { tileColumn: 9, tileRow: 1 }, { tileColumn: 9, tileRow: 1 }, { tileColumn: 9, tileRow: 1 }]
 	},
 	jump: function (type) {
 		if (!game.started && game.player.y === 0) game.timer.start();
+
 		var startingY = this.y;
 		var time = 1;
 		var maxHeight = 121;

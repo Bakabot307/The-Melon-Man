@@ -52,7 +52,7 @@ game.drawHpBar = function (width) {
 	game.context.strokeRect(
 		Math.round(game.options.canvasWidth / 2 - game.options.tileWidth / 2 + 3),
 		Math.round(game.options.canvasHeight / 2 - game.options.tileHeight / 2 - 5),
-		Math.round(game.options.canvasWidth / 4),
+		20,
 		2)
 }
 
@@ -63,6 +63,22 @@ game.drawFireball = function (x, y) {
 	game.context.drawImage(
 		game.textures,
 		6 * game.options.tileWidth,
+		2 * game.options.tileHeight,
+		game.options.tileWidth * 1.7,
+		game.options.tileHeight * 2,
+		screenX,
+		screenY,
+		game.options.tileWidth,
+		game.options.tileHeight
+	)
+}
+
+game.drawChicken = function (x, y) {
+	var screenX = x - Math.round(game.player.x) + Math.round(game.options.canvasWidth / 2);
+	var screenY = y - Math.round(game.player.y) + Math.round(game.options.canvasHeight / 2);
+	game.context.drawImage(
+		game.textures,
+		7.7 * game.options.tileWidth,
 		2 * game.options.tileHeight,
 		game.options.tileWidth * 2,
 		game.options.tileHeight * 2,
@@ -139,20 +155,22 @@ game.redraw = function () {
 	game.checkCollisionsBall();
 
 	// Draw the laser floor
-
 	if (!game.challenges.laser.spawned && game.player.y < 0) {
 		game.challenges.laser.spawn()
-	} else {
-
 	}
-
 	var laser = game.challenges.laser
-
 	game.drawLaser(laser.x, laser.y, laser.width, laser.height)
 	if (game.started) {
 		game.challenges.laser.move()
 	}
 	game.checkCollisionsLaser()
+
+	// draw the chicken
+	for (var i = 0; i < game.challenges.chicken.chickens.length; i++) {
+		game.drawChicken(game.challenges.chicken.chickens[i].x, game.challenges.chicken.chickens[i].y)
+	}
+	game.challenges.chicken.move()
+	game.checkCollisionsChicken()
 
 	// Draw the points
 	game.points = Math.round(-game.player.highestY / (3 * game.options.tileHeight)), game.canvas.width - 50, game.canvas.height - 12;
