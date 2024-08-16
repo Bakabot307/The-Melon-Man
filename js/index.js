@@ -75,6 +75,26 @@ var game = {
 	},
 	isOver: false,
 	points: 0,
+	bestScoreElement: document.getElementById('bestScore'),
+	setCookie: function (name, value, days) {
+		let expires = "";
+		if (days) {
+			const date = new Date();
+			date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+			expires = "; expires=" + date.toUTCString();
+		}
+		document.cookie = name + "=" + (value || "") + expires + "; path=/";
+	},
+	getCookie: function (name) {
+		const nameEQ = name + "=";
+		const ca = document.cookie.split(';');
+		for (let i = 0; i < ca.length; i++) {
+			let c = ca[i];
+			while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+			if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+		}
+		return null;
+	},
 	timer: {
 		timer: 0,
 		timerElement: document.getElementById('timer'),
@@ -160,7 +180,7 @@ var game = {
 		chicken: {
 			fireInterval: null,
 			chickens: [],
-			speed: 0.8,
+			speed: 1.3,
 			fireIntervalTime: 5000,
 			stunDuration: 1000,
 			spawn: function () {

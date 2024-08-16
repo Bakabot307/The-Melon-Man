@@ -245,6 +245,13 @@ game.redraw = function () {
 	// Draw the points
 	game.points = Math.round(-game.player.highestY / (3 * game.options.tileHeight)), game.canvas.width - 50, game.canvas.height - 12;
 	game.counter.innerHTML = "Points: " + game.points;
+	var bestScore = game.getCookie("bestScore")
+	if (bestScore == null) bestScore = 0
+	if (bestScore < game.points) {
+		bestScore = game.points
+		game.setCookie("bestScore", game.bestScore, 365)
+	}
+	game.bestScoreElement.innerHTML = "Best: " + bestScore
 }
 
 game.drawTitle = function () {

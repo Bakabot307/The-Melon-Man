@@ -82,6 +82,17 @@ canvas {
   z-index: 2;
 }
 
+.bestScore {
+  font-family: 'superscript', Arial, sans-serif;
+  font-size: 22px;
+  color: black;
+  position: absolute;
+  top: 70px;
+  left: 50px;
+  text-align: center;
+  z-index: 2;
+}
+
 
 .mobileControls {
   position: absolute;
