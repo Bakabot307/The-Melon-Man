@@ -234,14 +234,15 @@ var game = {
 	buff: {
 		shield: {
 			active: false,
-			immortalTimeOutDuration: 2000,
+			immortalTimeOutDuration: 1500,
 			isImmortal: false,
 			immortalTimeOut: null,
 			speed: 0.3,
 			shieldInterval: null,
-			shieldIntervalTime: 15000,
+			shieldIntervalTime: 20000,
 			width: 10,
 			height: 10,
+			radius: 15,
 			shields: [],
 			activeShield: function () {
 				this.active = true;
@@ -254,7 +255,8 @@ var game = {
 					x: game.options.canvasWidth / 2 + Math.round(game.player.x) - Math.round(game.options.canvasWidth / 2),
 					y: game.player.y - game.options.canvasHeight * 5,
 					width: this.width,
-					height: this.height
+					height: this.height,
+					radius: this.radius
 				})
 			},
 			move: function () {

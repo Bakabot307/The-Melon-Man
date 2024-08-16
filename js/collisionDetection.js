@@ -91,6 +91,7 @@ game.buffReward = function (buf, index) {
 				game.player.hpElement.style.color = "green";
 				game.buff.hp.hps.splice(index, 1);
 				setTimeout(function () {
+					if (game.buff.shield.isImmortal) return;
 					game.player.hpElement.style.color = "black";
 				}, 3000);
 			}
@@ -119,6 +120,7 @@ game.knockPlayerBack = function () {
 	game.player.direction = "stunned";
 	game.player.justHitByChicken = true;
 	setTimeout(function () {
+		if (game.buff.shield.isImmortal) return;
 		game.player.direction = currentDirection;
 		game.player.justHitByChicken = false;
 	}, game.challenges.chicken.stunDuration);

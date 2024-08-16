@@ -230,13 +230,13 @@ game.redraw = function () {
 	game.buff.shield.move()
 
 
-	var shield = { x: game.buff.shield.x, y: game.buff.shield.y, r: 15 }
-	game.checkCollisionsBuff(game.buff.hp.hps)
+	var shield = { x: game.buff.shield.x, y: game.buff.shield.y, r: game.buff.shield.radius }
 
 	//check game collisions
 	if (game.started) {
-		game.checkCollisionsBuff(game.buff.shield.shields)
 		game.checkCollisionsLaser()
+		game.checkCollisionsBuff(game.buff.shield.shields)
+		game.checkCollisionsBuff(game.buff.hp.hps)
 		game.checkCollisionsChicken(shield)
 		game.checkCollisionsBall(shield)
 	}

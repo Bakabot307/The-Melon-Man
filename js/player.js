@@ -3,7 +3,7 @@ game.player = {
 	y: 0,
 	height: 24,
 	highestY: 0,
-	hp: 90,
+	hp: 100,
 	hpElement: document.getElementById('hp'),
 	justHit: false,
 	justHitByChicken: false,
