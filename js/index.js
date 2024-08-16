@@ -181,7 +181,7 @@ var game = {
 			fireInterval: null,
 			chickens: [],
 			speed: 1.3,
-			fireIntervalTime: 5000,
+			fireIntervalTime: 3000,
 			stunDuration: 1000,
 			spawn: function () {
 				let x = Math.random() * game.options.canvasWidth;
