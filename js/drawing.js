@@ -47,7 +47,7 @@ game.drawHpBar = function (width) {
 		width,
 		2
 	)
-	game.context.strokeStyle = "black";
+	game.context.strokeStyle = game.buff.hp.hpBorderColor;
 	game.context.lineWidth = 1;
 	game.context.strokeRect(
 		Math.round(game.options.canvasWidth / 2 - game.options.tileWidth / 2 + 3),
@@ -57,7 +57,6 @@ game.drawHpBar = function (width) {
 }
 
 game.drawRain = function (x, y, color) {
-
 	var screenX = x - Math.round(game.player.x) + Math.round(game.options.canvasWidth / 2);
 	var screenY = y - Math.round(game.player.y) + Math.round(game.options.canvasHeight / 2);
 	game.context.beginPath()
@@ -65,6 +64,20 @@ game.drawRain = function (x, y, color) {
 		screenY,
 		1, 0, 2 * Math.PI)
 	game.context.strokeStyle = color;
+	game.context.stroke();
+}
+
+game.drawSheild = function (x, y) {
+	var screenX = x - Math.round(game.player.x) + Math.round(game.options.canvasWidth / 2);
+	var screenY = y - Math.round(game.player.y) + Math.round(game.options.canvasHeight / 2);
+	game.context.beginPath()
+	game.context.arc(
+		screenX,
+		screenY,
+		14,
+		0,
+		2 * Math.PI)
+	game.context.strokeStyle = "red";
 	game.context.stroke();
 }
 
@@ -105,6 +118,13 @@ game.drawHpBuff = function (x, y, width, height) {
 	var screenX = x - Math.round(game.player.x) + Math.round(game.options.canvasWidth / 2);
 	var screenY = y - Math.round(game.player.y) + Math.round(game.options.canvasHeight / 2);
 	game.context.fillStyle = "green"
+	game.context.fillRect(screenX, screenY, width, height)
+}
+
+game.drawSheildBuff = function (x, y, width, height) {
+	var screenX = x - Math.round(game.player.x) + Math.round(game.options.canvasWidth / 2);
+	var screenY = y - Math.round(game.player.y) + Math.round(game.options.canvasHeight / 2);
+	game.context.fillStyle = "gray"
 	game.context.fillRect(screenX, screenY, width, height)
 }
 
@@ -198,14 +218,27 @@ game.redraw = function () {
 		game.drawHpBuff(game.buff.hp.hps[i].x, game.buff.hp.hps[i].y, game.buff.hp.hps[i].width, game.buff.hp.hps[i].height)
 	}
 	game.buff.hp.move()
-	game.checkCollisionsHp()
+	//draw shield	
+	if (game.buff.shield.active == true) {
+		game.buff.shield.activeShield()
+		game.drawSheild(game.buff.shield.x, game.buff.shield.y)
+	}
+	//draw shield buff
+	for (var i = 0; i < game.buff.shield.shields.length; i++) {
+		game.drawSheildBuff(game.buff.shield.shields[i].x, game.buff.shield.shields[i].y, game.buff.shield.shields[i].width, game.buff.shield.shields[i].height)
+	}
+	game.buff.shield.move()
+
+
+	var shield = { x: game.buff.shield.x, y: game.buff.shield.y, r: 15 }
+	game.checkCollisionsBuff(game.buff.hp.hps)
 
 	//check game collisions
 	if (game.started) {
-		game.checkCollisionsChicken()
-		game.checkCollisionsBall()
+		game.checkCollisionsBuff(game.buff.shield.shields)
 		game.checkCollisionsLaser()
-
+		game.checkCollisionsChicken(shield)
+		game.checkCollisionsBall(shield)
 	}
 
 

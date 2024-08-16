@@ -36,7 +36,7 @@ game.checkCollisions = function () {
 
 	return false
 }
-game.checkCollisionsBall = function () {
+game.checkCollisionsBall = function (shield) {
 	// Check collisions with fireballs
 	for (var i = 0; i < game.challenges.fireball.fireballs.length; i++) {
 		var fireball = game.challenges.fireball.fireballs[i];
@@ -47,47 +47,65 @@ game.checkCollisionsBall = function () {
 			game.player.y + game.options.tileHeight / 2 > fireball.y) {
 
 			game.handleHitCollision("ball");
-			return true;
 		}
+		game.checkCircleRectangleCollision(shield, fireball);
 	}
 }
 
 
-game.checkCollisionsChicken = function () {
+game.checkCollisionsChicken = function (shield) {
 	// Check collisions with chickens
 	for (var i = 0; i < game.challenges.chicken.chickens.length; i++) {
 		var chicken = game.challenges.chicken.chickens[i];
-
 		if (
 			game.player.x + chicken.width < chicken.x + chicken.width * 2 &&
 			game.player.x > chicken.x &&
 			game.player.y - chicken.height < chicken.y + chicken.height / 2 &&
 			game.player.y + game.options.tileHeight / 2 > chicken.y) {
 			game.knockPlayerBack();
-			return true;
+		}
+		game.checkCircleRectangleCollision(shield, chicken);
+	}
+}
+
+game.checkCollisionsBuff = function (buff) {
+	for (var i = 0; i < buff.length; i++) {
+		var buf = buff[i];
+		if (
+			game.player.x + buf.width / 2 < buf.x + buf.width * 2 &&
+			game.player.x > buf.x - buf.width &&
+			game.player.y - game.options.tileHeight / 2 < buf.y + buf.height &&
+			game.player.y + game.options.tileHeight / 2 > buf.y) {
+			game.buffReward(buf, i);
 		}
 	}
 }
 
-game.checkCollisionsHp = function () {
-	for (var i = 0; i < game.buff.hp.hps.length; i++) {
-		var hp = game.buff.hp.hps[i];
-		if (
-			game.player.x + hp.width < hp.x + hp.width * 2 &&
-			game.player.x + game.options.tileWidth > hp.x &&
-			game.player.y - game.options.tileHeight / 2 < hp.y + hp.height &&
-			game.player.y + game.options.tileHeight / 2 > hp.y) {
+game.buffReward = function (buf, index) {
+	var name = buf.name;
+	switch (name) {
+		case "hp":
 			if (game.player.hp < 100) {
 				game.player.hp += 10;
 				game.player.hpElement.innerHTML = `HP: ${game.player.hp} hp`;
 				game.player.hpElement.style.color = "green";
-				game.buff.hp.hps.splice(i, 1);
+				game.buff.hp.hps.splice(index, 1);
+				setTimeout(function () {
+					game.player.hpElement.style.color = "black";
+				}, 3000);
 			}
-		}
+			break;
+		case "shield":
+			game.buff.shield.active = true;
+			game.buff.shield.shields.splice(index, 1);
+			game.buff.hp.hpBorderColor = "yellow";
+			break;
 	}
 }
+
 game.knockPlayerBack = function () {
 	if (game.player.justHitByChicken) return;
+	if (game.buff.shield.isImmortal) return;
 	if (game.player.direction == "left") {
 		game.player.x += 10;
 	} else {
@@ -122,20 +140,43 @@ game.handleHitCollision = function (type) {
 		game.isOver = true;
 		return;
 	};
+	if (game.buff.shield.isImmortal) return;
 	if (game.player.justHit) return;
 	game.player.justHit = true;
 	game.player.hp -= 10;
 	game.player.hpElement.innerHTML = `HP: ${game.player.hp} hp`;
 	game.player.hpElement.style.color = "red";
+	game.buff.hp.hpBorderColor = "yellow";
 
-
-	setTimeout(function () {
+	if (game.challenges.fireball.fireTimeout) clearTimeout(game.challenges.fireball.fireTimeout);
+	game.challenges.fireball.fireTimeout = setTimeout(function () {
 		game.player.hpElement.style.color = "black";
+		game.buff.hp.hpBorderColor = "black";
 		game.player.justHit = false;
-	}, game.challenges.fireball.fireIntervalTime);
+	}, game.challenges.fireball.fireTimeoutDuration);
+
 
 
 	if (game.player.hp <= 0) {
 		game.isOver = true;
+	}
+}
+
+game.checkCircleRectangleCollision = function (circle, rectangle) {
+	let closestX = Math.max(rectangle.x, Math.min(circle.x, rectangle.x + rectangle.width));
+	let closestY = Math.max(rectangle.y, Math.min(circle.y, rectangle.y + rectangle.height));
+
+	let distanceX = circle.x - closestX;
+	let distanceY = circle.y - closestY;
+
+	let distanceSquared = (distanceX * distanceX) + (distanceY * distanceY);
+	if (distanceSquared <= (circle.r * circle.r) > 0) {
+		game.buff.shield.active = false;
+		game.buff.shield.isImmortal = true;
+		if (game.buff.shield.immortalTimeOut) clearTimeout(game.buff.shield.immortalTimeOut);
+		game.buff.shield.immortalTimeOut = setTimeout(function () {
+			game.buff.shield.isImmortal = false;
+			game.buff.hp.hpBorderColor = "black";
+		}, game.buff.shield.immortalTimeOutDuration);
 	}
 }

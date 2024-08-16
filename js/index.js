@@ -1,4 +1,3 @@
-
 // The spaghetti code masterpiece
 var game = {
 	canvas: document.getElementById('canvas'),
@@ -41,28 +40,32 @@ var game = {
 			}.bind(this, key)
 		}
 		// spawn rain
-		game.challenges.rain.spawn()
 		this.challenges.rain.rainInterval = setInterval(function () {
 			game.challenges.rain.spawn()
 		}, this.challenges.rain.rainIntervalTime)
 
 		// spawn hp
+		game.buff.hp.spawn()
 		this.buff.hp.hpInterval = setInterval(function () {
-			game.buff.hp.spawn()
+			if (game.started)
+				game.buff.hp.spawn()
 		}, this.buff.hp.hpIntervalTime)
+		// spawn shield
+		this.buff.shield.shieldInterval = setInterval(function () {
+			if (game.started)
+				game.buff.shield.spawn()
+		}, this.buff.shield.shieldIntervalTime)
 
 		//spawn fireballs
-		game.challenges.fireball.spawn()
 		this.challenges.fireball.fireInterval = setInterval(function () {
-			game.challenges.fireball.spawn()
+			if (game.started)
+				game.challenges.fireball.spawn()
 		}, this.challenges.fireball.fireIntervalTime)
 		//spawn chickens
-		game.challenges.chicken.spawn()
 		this.challenges.chicken.fireInterval = setInterval(function () {
-			game.challenges.chicken.spawn()
+			if (game.started)
+				game.challenges.chicken.spawn()
 		}, this.challenges.chicken.fireIntervalTime)
-
-
 
 		this.textures.src = this.options.texturesPath
 		this.textures.onload = onInit
@@ -107,17 +110,16 @@ var game = {
 	},
 	challenges: {
 		fireball: {
-			speed: 0.1,
+			speed: 0.3,
 			fireballs: [],
 			fireInterval: null,
-			fireIntervalTime: 5000,
+			fireIntervalTime: 1000,
+			fireTimeout: null,
+			fireTimeoutDuration: 1000,
 			spawn: function () {
-				var mapWidth = game.options.canvasWidth;
-				var middleStart = (mapWidth / 2) - (mapWidth * 0.25);
-				var middleWidth = mapWidth * 0.5;
 				this.fireballs.push({
-					x: middleStart + Math.random() * middleWidth,
-					y: game.player.y - game.options.canvasHeight,
+					x: Math.random() * (0 - game.options.canvasWidth * 2 - Math.abs(game.player.x)) + (game.options.canvasWidth + game.player.x),
+					y: game.player.y - game.options.canvasHeight * 5,
 					width: game.options.tileWidth,
 					height: game.options.tileHeight
 				});
@@ -158,7 +160,7 @@ var game = {
 		chicken: {
 			fireInterval: null,
 			chickens: [],
-			speed: 0.5,
+			speed: 0.8,
 			fireIntervalTime: 5000,
 			stunDuration: 1000,
 			spawn: function () {
@@ -178,7 +180,6 @@ var game = {
 			move: function () {
 				for (var i = 0; i < this.chickens.length; i++) {
 					let angleInRadians = this.chickens[i].angle * Math.PI / 180;
-
 					this.chickens[i].x += this.speed * Math.cos(angleInRadians);
 					this.chickens[i].y += this.speed * Math.sin(angleInRadians);
 				}
@@ -233,12 +234,38 @@ var game = {
 	buff: {
 		shield: {
 			active: false,
-			duration: 5000,
-			activate: function () {
+			immortalTimeOutDuration: 2000,
+			isImmortal: false,
+			immortalTimeOut: null,
+			speed: 0.3,
+			shieldInterval: null,
+			shieldIntervalTime: 15000,
+			width: 10,
+			height: 10,
+			shields: [],
+			activeShield: function () {
 				this.active = true;
-				setTimeout(function () {
-					this.active = false;
-				}.bind(this), this.duration);
+				this.x = game.options.canvasWidth / 2 + Math.round(game.player.x) - Math.round(game.options.canvasWidth / 2);
+				this.y = game.player.y;
+			},
+			spawn: function () {
+				this.shields.push({
+					name: "shield",
+					x: game.options.canvasWidth / 2 + Math.round(game.player.x) - Math.round(game.options.canvasWidth / 2),
+					y: game.player.y - game.options.canvasHeight * 5,
+					width: this.width,
+					height: this.height
+				})
+			},
+			move: function () {
+				for (var i = 0; i < this.shields.length; i++) {
+					this.shields[i].y = this.shields[i].y + this.speed;
+					// remove shield if they are out of the screen
+					if (this.shields[i].y > game.player.y + game.options.canvasHeight * 2) {
+						this.shields.splice(i, 1);
+						i--;
+					}
+				}
 			}
 		},
 		hp: {
@@ -246,12 +273,14 @@ var game = {
 			speed: 0.3,
 			hpInterval: null,
 			hpIntervalTime: 15000,
+			hpBorderColor: "black",
 			spawn: function () {
 				this.hps.push({
+					name: "hp",
 					x: game.options.canvasWidth / 2 + Math.round(game.player.x) - Math.round(game.options.canvasWidth / 2),
 					y: game.player.y - game.options.canvasHeight * 5,
 					width: 10,
-					height: 10,
+					height: 10
 				});
 			},
 			move: function () {

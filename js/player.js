@@ -3,7 +3,7 @@ game.player = {
 	y: 0,
 	height: 24,
 	highestY: 0,
-	hp: 100,
+	hp: 90,
 	hpElement: document.getElementById('hp'),
 	justHit: false,
 	justHitByChicken: false,
@@ -82,7 +82,6 @@ game.player = {
 		game.sounds.jump.play();
 		this.startedJump = true;
 		this.isInAir = true;
-
 		this.fallTimeout(startingY, time, maxHeight);
 	}
 }

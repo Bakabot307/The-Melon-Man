@@ -104,4 +104,17 @@ game.generateMap = function () {
 			movementRate: 0.05
 		})
 	}
+	///infinte loop random platforms
+	function getRandomPlatform() {
+		var platforms = ["grassPlatform", "snowPlatform", "gelPlatform", "seaWeedPlatform", "eyePlatform_1", "eyePlatform_2", "eyePlatform_3", "eyePlatform_4", "manHoldingPlatform", "lava_platform"];
+		return platforms[Math.floor(Math.random() * platforms.length)];
+	}
+	for (var i = 140; i < 1000; i++) {
+		this.map.structures.push({
+			name: getRandomPlatform(),
+			x: Math.floor(Math.random() * 8),
+			y: -i * 3,
+			movementRate: Math.random() * 0.5
+		})
+	}
 }
