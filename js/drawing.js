@@ -101,6 +101,13 @@ game.drawChicken = function (x, y) {
 	)
 }
 
+game.drawHpBuff = function (x, y, width, height) {
+	var screenX = x - Math.round(game.player.x) + Math.round(game.options.canvasWidth / 2);
+	var screenY = y - Math.round(game.player.y) + Math.round(game.options.canvasHeight / 2);
+	game.context.fillStyle = "green"
+	game.context.fillRect(screenX, screenY, width, height)
+}
+
 
 game.drawLaser = function (x, y, width, height) {
 	var screenY = y - Math.round(game.player.y);
@@ -186,11 +193,19 @@ game.redraw = function () {
 	}
 	game.challenges.chicken.move()
 
+	//draw the hp buff
+	for (var i = 0; i < game.buff.hp.hps.length; i++) {
+		game.drawHpBuff(game.buff.hp.hps[i].x, game.buff.hp.hps[i].y, game.buff.hp.hps[i].width, game.buff.hp.hps[i].height)
+	}
+	game.buff.hp.move()
+	game.checkCollisionsHp()
+
 	//check game collisions
 	if (game.started) {
 		game.checkCollisionsChicken()
 		game.checkCollisionsBall()
 		game.checkCollisionsLaser()
+
 	}
 
 
@@ -218,14 +233,12 @@ game.requestRedraw = function () {
 	if (game.isOver) {
 		clearInterval(this.player.fallInterval)
 		game.timer.stop()
-
 		game.context.font = "30px superscript"
 		game.context.textAlign = "center"
 		game.context.fillStyle = "black"
 		game.context.fillText("Game over!", game.canvas.width / 2, game.canvas.height / 2)
 		game.context.font = "15px Georgia"
 		game.context.fillText(`${game.points} points in ${Math.floor(game.timer.timer / 1000)} s`, game.canvas.width / 2, game.canvas.height / 2 + 25)
-
 		game.context.font = "15px Georgia"
 		game.context.fillText("Press SPACE to restart", game.canvas.width / 2, game.canvas.height / 2 + 50)
 	}
@@ -252,14 +265,15 @@ game.restart = function () {
 	//Reset laser
 	game.challenges.laser.y = game.player.y + game.options.canvasHeight * 1.55;
 	game.challenges.laser.spawned = false;
+	game.challenges.laser.speed = 0.1;
 
 	// Reset fireballs
 	game.challenges.fireball.fireballs = []
 	// Reset chickens
 	game.challenges.chicken.chickens = []
-	// Reset Rain
-	game.challenges.rain.drops = []
 
+	// Reset hp buff
+	game.buff.hp.hps = []
 	game.generateMap()
 }
 

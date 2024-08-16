@@ -41,9 +41,15 @@ var game = {
 			}.bind(this, key)
 		}
 		// spawn rain
+		game.challenges.rain.spawn()
 		this.challenges.rain.rainInterval = setInterval(function () {
 			game.challenges.rain.spawn()
 		}, this.challenges.rain.rainIntervalTime)
+
+		// spawn hp
+		this.buff.hp.hpInterval = setInterval(function () {
+			game.buff.hp.spawn()
+		}, this.buff.hp.hpIntervalTime)
 
 		//spawn fireballs
 		game.challenges.fireball.spawn()
@@ -54,7 +60,6 @@ var game = {
 		game.challenges.chicken.spawn()
 		this.challenges.chicken.fireInterval = setInterval(function () {
 			game.challenges.chicken.spawn()
-			console.log('chicken', game.challenges.chicken.chickens)
 		}, this.challenges.chicken.fireIntervalTime)
 
 
@@ -177,8 +182,8 @@ var game = {
 					this.chickens[i].x += this.speed * Math.cos(angleInRadians);
 					this.chickens[i].y += this.speed * Math.sin(angleInRadians);
 				}
-				// Remove chickens if there are more than 10
-				if (this.chickens.length > 10) {
+				// Remove chickens if there are more than 20
+				if (this.chickens.length > 20) {
 					this.chickens.shift();
 				}
 			}
@@ -191,9 +196,9 @@ var game = {
 			color: "black",
 			spawn: function () {
 				//change rain color based on points
-				if (game.points < 10) {
+				if (game.points <= 10) {
 					this.color = "black"
-				} else if (game.points > 10 && game.points < 15) {
+				} else if (game.points > 10 && game.points <= 15) {
 					this.color = "blue"
 				} else if (game.points > 15 && game.points < 20) {
 					this.color = "red"
@@ -225,5 +230,45 @@ var game = {
 			}
 		}
 	},
+	buff: {
+		shield: {
+			active: false,
+			duration: 5000,
+			activate: function () {
+				this.active = true;
+				setTimeout(function () {
+					this.active = false;
+				}.bind(this), this.duration);
+			}
+		},
+		hp: {
+			hps: [],
+			speed: 0.3,
+			hpInterval: null,
+			hpIntervalTime: 15000,
+			spawn: function () {
+				this.hps.push({
+					x: game.options.canvasWidth / 2 + Math.round(game.player.x) - Math.round(game.options.canvasWidth / 2),
+					y: game.player.y - game.options.canvasHeight * 5,
+					width: 10,
+					height: 10,
+				});
+			},
+			move: function () {
+				for (var i = 0; i < this.hps.length; i++) {
+					this.hps[i].y = this.hps[i].y + this.speed;
+					// remove hp if they are out of the screen
+					if (this.hps[i].y > game.player.y + game.options.canvasHeight * 2) {
+						this.hps.splice(i, 1);
+						i--;
+					}
+				}
+			}
+
+		}
+
+	}
+
 }
+
 

@@ -28,7 +28,6 @@ game.checkCollisions = function () {
 				clearInterval(game.player.fallInterval)
 				game.player.isInAir = false
 				game.player.platform = watchTheseGuys[i]
-				console.log(game.player.platform)
 				game.player.y = Math.round(game.player.y / game.options.tileHeight) * game.options.tileHeight
 				return true
 			}
@@ -70,6 +69,23 @@ game.checkCollisionsChicken = function () {
 	}
 }
 
+game.checkCollisionsHp = function () {
+	for (var i = 0; i < game.buff.hp.hps.length; i++) {
+		var hp = game.buff.hp.hps[i];
+		if (
+			game.player.x + hp.width < hp.x + hp.width * 2 &&
+			game.player.x + game.options.tileWidth > hp.x &&
+			game.player.y - game.options.tileHeight / 2 < hp.y + hp.height &&
+			game.player.y + game.options.tileHeight / 2 > hp.y) {
+			if (game.player.hp < 100) {
+				game.player.hp += 10;
+				game.player.hpElement.innerHTML = `HP: ${game.player.hp} hp`;
+				game.player.hpElement.style.color = "green";
+				game.buff.hp.hps.splice(i, 1);
+			}
+		}
+	}
+}
 game.knockPlayerBack = function () {
 	if (game.player.justHitByChicken) return;
 	if (game.player.direction == "left") {

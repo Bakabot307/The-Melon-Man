@@ -84,6 +84,5 @@ game.player = {
 		this.isInAir = true;
 
 		this.fallTimeout(startingY, time, maxHeight);
-		console.log(this.numberOfAllowedJump);
 	}
 }
