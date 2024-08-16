@@ -24,7 +24,6 @@ game.checkCollisions = function () {
 				&& (game.structures[watchTheseGuys[i].name][j].collidable == undefined || game.structures[watchTheseGuys[i].name][j].collidable == true)
 				&& !game.player.startedJump
 			) {
-				//get platfarm type 
 
 				clearInterval(game.player.fallInterval)
 				game.player.isInAir = false
@@ -107,7 +106,7 @@ game.handleHitCollision = function (type) {
 		game.isOver = true;
 		return;
 	};
-	if (game.player.justHit || !game.started) return;
+	if (game.player.justHit) return;
 	game.player.justHit = true;
 	game.player.hp -= 10;
 	game.player.hpElement.innerHTML = `HP: ${game.player.hp} hp`;

@@ -41,7 +41,7 @@ game.player = {
 					game.isOver = true
 				}
 			} else {
-				this.numberOfAllowedJump = 3
+				this.numberOfAllowedJump = 2
 			}
 		}.bind(this, startingY, time, maxHeight), 12)
 	},
@@ -55,7 +55,6 @@ game.player = {
 	},
 	jump: function (type) {
 		if (!game.started && game.player.y === 0) game.timer.start();
-
 		var startingY = this.y;
 		var time = 1;
 		var maxHeight = 121;
@@ -79,10 +78,12 @@ game.player = {
 
 	initiateJump: function (startingY, time, maxHeight) {
 		clearInterval(this.fallTimeoutId);
+		this.numberOfAllowedJump -= 1;
 		game.sounds.jump.play();
 		this.startedJump = true;
 		this.isInAir = true;
-		this.numberOfAllowedJump -= 1;
+
 		this.fallTimeout(startingY, time, maxHeight);
+		console.log(this.numberOfAllowedJump);
 	}
 }

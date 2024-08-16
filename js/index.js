@@ -40,6 +40,10 @@ var game = {
 				this.backgrounds[currentKey].loaded = true
 			}.bind(this, key)
 		}
+		// spawn rain
+		this.challenges.rain.rainInterval = setInterval(function () {
+			game.challenges.rain.spawn()
+		}, this.challenges.rain.rainIntervalTime)
 
 		//spawn fireballs
 		game.challenges.fireball.spawn()
@@ -176,6 +180,47 @@ var game = {
 				// Remove chickens if there are more than 10
 				if (this.chickens.length > 10) {
 					this.chickens.shift();
+				}
+			}
+		},
+		rain: {
+			rainInterval: null,
+			rainIntervalTime: 50,
+			drops: [],
+			speed: 0.5,
+			color: "black",
+			spawn: function () {
+				//change rain color based on points
+				if (game.points < 10) {
+					this.color = "black"
+				} else if (game.points > 10 && game.points < 15) {
+					this.color = "blue"
+				} else if (game.points > 15 && game.points < 20) {
+					this.color = "red"
+				}
+				else {
+					if (game.points % 2 == 0) {
+						this.color = "yellow"
+					} else {
+						this.color = "green"
+					}
+				}
+				this.drops.push({
+					x: Math.random() * (0 - game.options.canvasWidth * 2 - Math.abs(game.player.x)) + (game.options.canvasWidth + game.player.x),
+					y: game.player.y - game.options.canvasHeight * 2,
+					width: 1,
+					height: 1,
+					color: this.color
+				});
+			},
+			move: function () {
+				for (var i = 0; i < this.drops.length; i++) {
+					this.drops[i].y = this.drops[i].y + this.speed;
+					// remove drops if they are out of the screen
+					if (this.drops[i].y > game.player.y + game.options.canvasHeight) {
+						this.drops.splice(i, 1);
+						i--;
+					}
 				}
 			}
 		}

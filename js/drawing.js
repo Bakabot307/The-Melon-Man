@@ -56,6 +56,18 @@ game.drawHpBar = function (width) {
 		2)
 }
 
+game.drawRain = function (x, y, color) {
+
+	var screenX = x - Math.round(game.player.x) + Math.round(game.options.canvasWidth / 2);
+	var screenY = y - Math.round(game.player.y) + Math.round(game.options.canvasHeight / 2);
+	game.context.beginPath()
+	game.context.arc(screenX,
+		screenY,
+		1, 0, 2 * Math.PI)
+	game.context.strokeStyle = color;
+	game.context.stroke();
+}
+
 
 game.drawFireball = function (x, y) {
 	var screenX = x - Math.round(game.player.x) + Math.round(game.options.canvasWidth / 2);
@@ -142,6 +154,11 @@ game.redraw = function () {
 	for (var i = 0; i < structuresToDraw.length; i++) {
 		game.drawStructure(structuresToDraw[i].name, structuresToDraw[i].x, structuresToDraw[i].y)
 	}
+	// Draw the rain
+	for (var i = 0; i < game.challenges.rain.drops.length; i++) {
+		game.drawRain(game.challenges.rain.drops[i].x, game.challenges.rain.drops[i].y, game.challenges.rain.drops[i].color)
+	}
+	game.challenges.rain.move()
 	// Draw the player
 	game.drawPlayer()
 	// Draw the hp bar
@@ -152,7 +169,6 @@ game.redraw = function () {
 	}
 
 	game.challenges.fireball.move();
-	game.checkCollisionsBall();
 
 	// Draw the laser floor
 	if (!game.challenges.laser.spawned && game.player.y < 0) {
@@ -163,14 +179,20 @@ game.redraw = function () {
 	if (game.started) {
 		game.challenges.laser.move()
 	}
-	game.checkCollisionsLaser()
 
 	// draw the chicken
 	for (var i = 0; i < game.challenges.chicken.chickens.length; i++) {
 		game.drawChicken(game.challenges.chicken.chickens[i].x, game.challenges.chicken.chickens[i].y)
 	}
 	game.challenges.chicken.move()
-	game.checkCollisionsChicken()
+
+	//check game collisions
+	if (game.started) {
+		game.checkCollisionsChicken()
+		game.checkCollisionsBall()
+		game.checkCollisionsLaser()
+	}
+
 
 	// Draw the points
 	game.points = Math.round(-game.player.highestY / (3 * game.options.tileHeight)), game.canvas.width - 50, game.canvas.height - 12;
@@ -235,6 +257,8 @@ game.restart = function () {
 	game.challenges.fireball.fireballs = []
 	// Reset chickens
 	game.challenges.chicken.chickens = []
+	// Reset Rain
+	game.challenges.rain.drops = []
 
 	game.generateMap()
 }
