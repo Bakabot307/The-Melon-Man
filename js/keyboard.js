@@ -9,7 +9,7 @@ game.moveLeft = function () {
 				if (game.player.isInAir) {
 					game.player.x -= 0.2
 				} else {
-					game.player.x -= 0.1
+					game.player.x -= game.player.platform.movementRate
 				}
 				if (!game.checkCollisions()) {
 					// Player should fall
@@ -30,7 +30,7 @@ game.moveRight = function () {
 				if (game.player.isInAir) {
 					game.player.x += 0.2
 				} else {
-					game.player.x += 0.1
+					game.player.x += game.player.platform.movementRate
 				}
 				if (!game.checkCollisions()) {
 					game.player.jump("fall")
@@ -85,3 +85,8 @@ game.keyup = function (event) {
 			break
 	}
 }
+
+
+
+
+

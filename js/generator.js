@@ -29,14 +29,16 @@ game.generateMap = function () {
 	this.map.structures.push({
 		name: "grassPlatform",
 		x: 0,
-		y: 0
+		y: 0,
+		movementRate: 0.1
 	})
 	// Generate the rest of the platforms
 	for (var i = 1; i < 20; i++) {
 		this.map.structures.push({
 			name: "grassPlatform",
 			x: Math.floor(Math.random() * 8),
-			y: -i * 3
+			y: -i * 3,
+			movementRate: 0.1
 		})
 	}
 
@@ -45,7 +47,8 @@ game.generateMap = function () {
 		this.map.structures.push({
 			name: "snowPlatform",
 			x: randomX,
-			y: -i * 3
+			y: -i * 3,
+			movementRate: 0.2
 		})
 		if (Math.floor(Math.random() * 7) == 0) {
 			this.map.structures.push({
@@ -60,7 +63,8 @@ game.generateMap = function () {
 		this.map.structures.push({
 			name: "gelPlatform",
 			x: Math.floor(Math.random() * 6),
-			y: -i * 3
+			y: -i * 3,
+			movementRate: 0.4
 		})
 	}
 
@@ -68,7 +72,8 @@ game.generateMap = function () {
 		this.map.structures.push({
 			name: "seaWeedPlatform",
 			x: Math.floor(Math.random() * 4),
-			y: -i * 3
+			y: -i * 3,
+			movementRate: 0.3
 		})
 	}
 
@@ -77,7 +82,8 @@ game.generateMap = function () {
 		this.map.structures.push({
 			name: name,
 			x: Math.floor(Math.random() * 8),
-			y: -i * 3
+			y: -i * 3,
+			movementRate: 0.2
 		})
 	}
 
@@ -85,7 +91,8 @@ game.generateMap = function () {
 		this.map.structures.push({
 			name: "manHoldingPlatform",
 			x: Math.floor(Math.random() * 8),
-			y: -i * 3
+			y: -i * 3,
+			movementRate: 0.2
 		})
 	}
 
@@ -93,7 +100,8 @@ game.generateMap = function () {
 		this.map.structures.push({
 			name: "lava_platform",
 			x: Math.floor(Math.random() * 8),
-			y: -i * 3
+			y: -i * 3,
+			movementRate: 0.05
 		})
 	}
 }

@@ -24,8 +24,12 @@ game.checkCollisions = function () {
 				&& (game.structures[watchTheseGuys[i].name][j].collidable == undefined || game.structures[watchTheseGuys[i].name][j].collidable == true)
 				&& !game.player.startedJump
 			) {
+				//get platfarm type 
+
 				clearInterval(game.player.fallInterval)
 				game.player.isInAir = false
+				game.player.platform = watchTheseGuys[i]
+				console.log(game.player.platform)
 				game.player.y = Math.round(game.player.y / game.options.tileHeight) * game.options.tileHeight
 				return true
 			}

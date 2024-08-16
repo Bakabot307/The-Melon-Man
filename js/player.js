@@ -9,9 +9,15 @@ game.player = {
 	justHitByChicken: false,
 	direction: "left",
 	isInAir: false,
+	platform: {
+		name: "grassPlatform",
+		x: 0,
+		y: 0,
+		movementRate: 0.1
+	},
 	startedJump: false,
 	moveInterval: null,
-	numberOfAllowedJump: 3,
+	numberOfAllowedJump: 2,
 	fallTimeoutId: null,
 	fallTimeout: function (startingY, time, maxHeight) {
 		if (this.fallTimeoutId) clearTimeout(this.fallTimeoutId)

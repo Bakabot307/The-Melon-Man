@@ -233,6 +233,8 @@ game.restart = function () {
 
 	// Reset fireballs
 	game.challenges.fireball.fireballs = []
+	// Reset chickens
+	game.challenges.chicken.chickens = []
 
 	game.generateMap()
 }
