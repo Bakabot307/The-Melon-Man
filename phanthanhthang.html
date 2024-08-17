@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<style>
+    canvas {
+        background-color: rgb(0, 255, 149);
+    }
+</style>
+
+<head>
+    <title>Phan Thanh Thang</title>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        //Câu 1: Lập trình căn bản
+        //Hãy dùng HTML Canvas (một trong các context sau 2d, webgl, webgl2, webgpu) và Javascript
+        //để vẽ hình một hình ảnh con vật bất kỳ đầy màu sắc từ khối hình căn bản.
+
+        const canvas = document.getElementById("canvas");
+        canvas.width = 500;
+        canvas.height = 500;
+        canvas.style.border = "1px solid black";
+        const ctx = canvas.getContext('2d')
+
+
+        let number = 0;
+        let scale = 100;
+        let headX = canvas.width / 1.5;
+        let headY = canvas.height / 2.5;
+        let bodyX = canvas.width / 5;
+        let bodyY = canvas.height / 3;
+
+        const createEyes = (x, y, r, color) => {
+            ctx.beginPath();
+            if (number === 0) {
+                ctx.fillStyle = 'yellow';
+            } else {
+                ctx.fillStyle = color;
+            }
+
+            ctx.strokeStyle = 'blue';
+            ctx.lineWidth = 1;
+            ctx.arc(x, y, r, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        const createCircle = (x, y, r, color) => {
+            ctx.beginPath();
+            ctx.fillStyle = color;
+            ctx.strokeStyle = 'blue';
+            ctx.lineWidth = 1;
+            ctx.arc(x, y, r, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+        }
+
+
+
+        const createRetangle = (x, y, a, b, color, angle, hasStroke) => {
+            if (hasStroke === undefined) {
+                hasStroke = true;
+            }
+            ctx.save();
+            ctx.fillStyle = color;
+
+            ctx.translate(x + a / 2, y + b / 2);
+            ctx.rotate(angle * Math.PI / 180);
+            ctx.fillRect(-a / 2, -b / 2, a, b);
+            if (hasStroke === true) {
+                ctx.strokeStyle = 'black';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(-a / 2, -b / 2, a, b);
+            }
+
+            ctx.restore();
+        }
+
+        const createTriangle = (x, y, a, b, color, angle) => {
+            ctx.save();
+            ctx.translate(x + a / 2, y - b / 2);
+            ctx.rotate(angle * Math.PI / 180);
+            ctx.translate(-(x + a / 2), -(y - b / 2));
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + a, y);
+            ctx.lineTo(x + a / 2, y - b);
+            ctx.closePath();
+
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.strokeStyle = 'red';
+            ctx.stroke();
+            ctx.restore();
+        };
+
+        function createLine(x, y, a, b, color) {
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(a, b);
+            ctx.strokeStyle = color;
+            ctx.stroke();
+        }
+
+        function drawEyes() {
+            let size = 2;
+            let angle = number * 1;
+            let radius = scale * Math.sqrt(number) * 0.01;
+            let positionX = radius * Math.sin(angle);
+            let positionY = radius * Math.cos(angle);
+
+            createEyes(headX + positionX - 30, headY + positionY - 5, size, 'red');
+            createEyes(headX + positionX + 30, headY + positionY - 10, size, 'green');
+            number++;
+        }
+
+        function drawEyesWithAnimation() {
+            drawEyes();
+            createCircle(headX + 30, headY - 5, 5, 'black');
+            createCircle(headX - 30, headY - 5, 5, 'black');
+            if (number > 200) {
+                return;
+            }
+            requestAnimationFrame(drawEyesWithAnimation);
+        }
+        function drawCatMouth() {
+            ctx.beginPath();
+            ctx.moveTo(headX - 20, headY + 30);
+            ctx.bezierCurveTo(headX - 15, headY + 45, headX - 10, headY + 45, headX, headY + 25);
+            ctx.moveTo(headX, headY + 25);
+            ctx.bezierCurveTo(headX + 10, headY + 55, headX + 15, headY + 45, headX + 20, headY + 30);
+            ctx.strokeStyle = 'black';
+            ctx.stroke();
+        }
+        function drawHair() {
+            createLine(headX + 30, headY + 40, headX + 65, headY + 50, 'black');
+            createLine(headX + 35, headY + 35, headX + 80, headY + 30, 'black');
+            createLine(headX + 30, headY + 30, headX + 80, headY + 15, 'black');
+
+            createLine(headX - 30, headY + 40, headX - 65, headY + 50, 'black');
+            createLine(headX - 32, headY + 35, headX - 80, headY + 30, 'black');
+            createLine(headX - 30, headY + 30, headX - 80, headY + 15, 'black');
+        }
+
+
+        function drawBody() {
+            //tail
+            createRetangle(bodyX - 5, bodyY + 20, 100, 18, 'red', -137, false);
+            //leg1
+            createRetangle(bodyX + 60, bodyY + 90, 30, 50, 'orange', 0);
+            createTriangle(bodyX + 10, bodyY + 150, 10, 10, 'black', 180);
+            createTriangle(bodyX + 20, bodyY + 150, 10, 10, 'orange', 180);
+            createTriangle(bodyX + 30, bodyY + 150, 10, 10, 'red', 180);
+            //leg2
+            createRetangle(bodyX + 140, bodyY + 90, 30, 50, 'orange', 0);
+            createTriangle(bodyX + 60, bodyY + 150, 10, 10, 'pink', 180);
+            createTriangle(bodyX + 70, bodyY + 150, 10, 10, 'blue', 180);
+            createTriangle(bodyX + 80, bodyY + 150, 10, 10, 'cyan', 180);
+
+            //body
+            ctx.beginPath();
+            ctx.fillStyle = 'pink';
+            ctx.roundRect(bodyX, bodyY, 200, 100, [40, 20, 45, 15]);
+            ctx.fill();
+            ctx.stroke();
+
+            //leg3
+            createRetangle(bodyX + 10, bodyY + 90, 30, 50, 'orange', 0);
+            createTriangle(bodyX + 100, bodyY + 150, 10, 10, 'purple', 180);
+            createTriangle(bodyX + 110, bodyY + 150, 10, 10, 'green', 180);
+            createTriangle(bodyX + 120, bodyY + 150, 10, 10, 'black', 180);
+
+            //leg4
+            createRetangle(bodyX + 100, bodyY + 90, 30, 50, 'orange', 0);
+            createTriangle(bodyX + 140, bodyY + 150, 10, 10, 'orange', 180);
+            createTriangle(bodyX + 150, bodyY + 150, 10, 10, 'yellow', 180);
+            createTriangle(bodyX + 160, bodyY + 150, 10, 10, 'black', 180);
+
+
+
+        };
+
+
+        let curveTopX1 = bodyX + 17;
+        let curveTopY1 = bodyY + 2;
+        let curveTopX2 = bodyX - 130;
+        let curveTopY2 = bodyY - 120;
+        let curveTopX3 = bodyX + 100;
+        let curveTopY3 = bodyY - 50;
+        let curveTopX4 = bodyX - 50;
+        let curveTopY4 = bodyY - 100;
+
+        let tailNumber = 0;
+        let amplitude = 20;
+
+        function tailAnimation() {
+            ctx.clearRect(0, curveTopY2, 150, 115);
+            drawTail();
+
+            tailNumber += 0.05;
+
+            let xOffset = Math.sin(tailNumber) * amplitude;
+
+            curveTopX3 = bodyX + 100 + xOffset;
+            curveTopX4 = bodyX - 50 + xOffset;
+
+            requestAnimationFrame(tailAnimation);
+        }
+        function drawTail() {
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(curveTopX1, curveTopY1);
+            ctx.bezierCurveTo(curveTopX2, curveTopY2, curveTopX3, curveTopY3, curveTopX4, curveTopY4);
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = 17;
+            ctx.stroke();
+            ctx.restore();
+        }
+        function drawCat() {
+            drawEyesWithAnimation();
+            tailAnimation();
+            //body
+            drawBody();
+            //head
+            createCircle(headX, headY, 70, 'yellow');
+            //ears
+            createTriangle(headX - 50, headY - 60, 20, 50, 'orange', -25);
+            createTriangle(headX + 40, headY - 52, 30, 50, 'orange', 35);
+
+            drawCatMouth();
+            drawHair();
+
+            //nose
+            createTriangle(headX, headY + 10, 10, 10, 'black', 0);
+
+
+        }
+
+        function backgroud() {
+            //grass
+            createTriangle(0, 500, 50, 50, 'green', 0);
+            createTriangle(50, 500, 50, 50, 'green', 0);
+            createTriangle(85, 350, 25, 25, 'green', 0);
+            createTriangle(60, 350, 25, 25, 'green', 0);
+            createTriangle(75, 350, 25, 25, 'green', 0);
+
+            createTriangle(185, 400, 25, 25, 'green', 0);
+            createTriangle(160, 400, 25, 25, 'green', 0);
+            createTriangle(175, 500, 25, 25, 'green', 0);
+
+            createTriangle(285, 350, 25, 25, 'green', 0);
+            createTriangle(260, 350, 25, 25, 'green', 0);
+            createTriangle(275, 350, 25, 25, 'green', 0);
+
+            createTriangle(360, 400, 25, 25, 'green', 0);
+
+            createTriangle(410, 500, 25, 25, 'green', 0);
+            createTriangle(435, 500, 25, 25, 'green', 0);
+            createTriangle(460, 500, 25, 25, 'green', 0);
+        }
+
+        drawCat();
+        backgroud();
+    </script>
+</body>
+
+</html>
